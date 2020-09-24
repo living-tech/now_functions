@@ -5,16 +5,24 @@
   "author": "uekishun <ueki.shun.123@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.29.0"
+    "moment": "^2.29.0",
+    "now-enum-parser": "https://github.com/living-tech/now_enum_parser.git"
   },
   "scripts": {
     "build": "tsc",
     "start:dev": "tsc --watch",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "lint": "eslint \"{srctest}/**/*.ts\" --fix"
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"src/**\" --fix"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.2.0",
+    "@typescript-eslint/parser": "^4.2.0",
     "eslint": "^7.9.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "prettier": "^2.1.2",
     "typescript": "^4.0.3"
   }
