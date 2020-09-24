@@ -1,0 +1,21 @@
+{
+  "name": "now_functions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "uekishun <ueki.shun.123@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "moment": "^2.29.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start:dev": "tsc --watch",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{srctest}/**/*.ts\" --fix"
+  },
+  "devDependencies": {
+    "eslint": "^7.9.0",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.3"
+  }
+}
