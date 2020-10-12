@@ -1,8 +1,11 @@
 {
-  "name": "now_functions",
+  "name": "now-functions",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "author": "uekishun <ueki.shun.123@gmail.com>",
   "license": "MIT",
   "dependencies": {
