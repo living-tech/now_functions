@@ -13,7 +13,7 @@
     "now-enum-parser": "https://github.com/living-tech/now_enum_parser.git"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "start:dev": "tsc --watch",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"{src,test}/**\" --fix"

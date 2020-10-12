@@ -1,12 +1,28 @@
 import moment from "moment";
 import { TenancyTerm } from "now-enum-parser";
 
+import { countUseDays } from "./count_use_days";
+
 export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
-  startAt: Date;
-  endAt: Date;
-}): TenancyTerm => {
-  const startMoment = moment(tenancyPeriod.startAt);
-  const endMoment = moment(tenancyPeriod.endAt);
+  startAt: string;
+  endAt: string;
+}): TenancyTerm | null => {
+  const startMoment = moment(tenancyPeriod.startAt).startOf("day");
+  const endMoment = moment(tenancyPeriod.endAt).startOf("day");
+
+  const allUseDays: number | null = countUseDays({
+    startAt: tenancyPeriod.startAt,
+    endAt: tenancyPeriod.endAt,
+  });
+  if (
+    !startMoment.isValid() ||
+    !endMoment.isValid() ||
+    startMoment.isAfter(endMoment) ||
+    allUseDays === null ||
+    allUseDays < 7
+  ) {
+    return null;
+  }
 
   let useMonths = 0;
 
@@ -26,7 +42,7 @@ export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
     targetMonthMoment.add(1, "month");
   }
 
-  // 1年以上
+  // 12ヶ月（1年）以上
   if (useMonths >= 12) {
     return TenancyTerm.MoreThanOneYear;
   }
@@ -46,5 +62,6 @@ export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
     return TenancyTerm.OneToThreeMonths;
   }
 
+  // 1ヶ月未満
   return TenancyTerm.LessThanOneMonth;
 };
