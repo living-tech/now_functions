@@ -36,7 +36,11 @@ export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
       useDays = endMoment.diff(targetMonthMoment, "days") + 1;
     } else if (targetMonthMoment.isSame(startMoment, "month")) {
       useDays =
-        targetMonthMoment.clone().add(1, "month").diff(startMoment, "days") + 1;
+        targetMonthMoment
+          .clone()
+          .endOf("month")
+          .startOf("day")
+          .diff(startMoment, "days") + 1;
     }
     useMonths += useDays / daysInMonth;
     targetMonthMoment.add(1, "month");

@@ -6,7 +6,6 @@ export const countUseDays = (tenancyPeriod: {
 }): number | null => {
   const startMoment = moment(tenancyPeriod.startAt).startOf("day");
   const endMoment = moment(tenancyPeriod.endAt).startOf("day");
-
   if (
     !startMoment.isValid() ||
     !endMoment.isValid() ||

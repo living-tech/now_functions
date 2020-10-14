@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertTenancyPeriodToTenancyTerm = void 0;
-var moment_1 = __importDefault(require("moment"));
-var now_enum_parser_1 = require("now-enum-parser");
-var count_use_days_1 = require("./count_use_days");
-exports.convertTenancyPeriodToTenancyTerm = function (tenancyPeriod) {
-    var startMoment = moment_1.default(tenancyPeriod.startAt).startOf("day");
-    var endMoment = moment_1.default(tenancyPeriod.endAt).startOf("day");
-    var allUseDays = count_use_days_1.countUseDays({
+const moment_1 = __importDefault(require("moment"));
+const now_enum_parser_1 = require("now-enum-parser");
+const count_use_days_1 = require("./count_use_days");
+exports.convertTenancyPeriodToTenancyTerm = (tenancyPeriod) => {
+    const startMoment = moment_1.default(tenancyPeriod.startAt).startOf("day");
+    const endMoment = moment_1.default(tenancyPeriod.endAt).startOf("day");
+    const allUseDays = count_use_days_1.countUseDays({
         startAt: tenancyPeriod.startAt,
         endAt: tenancyPeriod.endAt,
     });
@@ -21,11 +21,11 @@ exports.convertTenancyPeriodToTenancyTerm = function (tenancyPeriod) {
         allUseDays < 7) {
         return null;
     }
-    var useMonths = 0;
-    var targetMonthMoment = startMoment.clone().startOf("month");
+    let useMonths = 0;
+    let targetMonthMoment = startMoment.clone().startOf("month");
     while (targetMonthMoment.isSameOrBefore(endMoment, "month")) {
-        var daysInMonth = targetMonthMoment.daysInMonth();
-        var useDays = daysInMonth;
+        const daysInMonth = targetMonthMoment.daysInMonth();
+        let useDays = daysInMonth;
         if (startMoment.isSame(endMoment, "month")) {
             useDays = endMoment.diff(targetMonthMoment, "days") + 1;
         }
@@ -34,7 +34,11 @@ exports.convertTenancyPeriodToTenancyTerm = function (tenancyPeriod) {
         }
         else if (targetMonthMoment.isSame(startMoment, "month")) {
             useDays =
-                targetMonthMoment.clone().add(1, "month").diff(startMoment, "days") + 1;
+                targetMonthMoment
+                    .clone()
+                    .endOf("month")
+                    .startOf("day")
+                    .diff(startMoment, "days") + 1;
         }
         useMonths += useDays / daysInMonth;
         targetMonthMoment.add(1, "month");
