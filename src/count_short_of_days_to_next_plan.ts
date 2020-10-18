@@ -1,7 +1,7 @@
 import moment from "moment";
+import { TenancyTerm } from "now-enum-parser";
 
 import { convertTenancyPeriodToTenancyTerm } from "./convert_tenancy_period_to_tenancy_term";
-import { TenancyTerm } from "now-enum-parser";
 
 const getNextTenancyTerm = (
   currentTenancyTerm: TenancyTerm | null
