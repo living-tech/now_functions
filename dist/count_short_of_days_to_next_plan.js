@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.countShortOfDaysToNextPlan = void 0;
 const moment_1 = __importDefault(require("moment"));
-const convert_tenancy_period_to_tenancy_term_1 = require("./convert_tenancy_period_to_tenancy_term");
 const now_enum_parser_1 = require("now-enum-parser");
+const convert_tenancy_period_to_tenancy_term_1 = require("./convert_tenancy_period_to_tenancy_term");
 const getNextTenancyTerm = (currentTenancyTerm) => {
     switch (currentTenancyTerm) {
         case now_enum_parser_1.TenancyTerm.LessThanOneMonth:
