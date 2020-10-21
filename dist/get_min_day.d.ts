@@ -1,6 +1,3 @@
+import { Moment } from "moment";
 import { TenancyTerm } from "now-enum-parser";
-interface RoomPlan {
-    tenancyTerm: TenancyTerm;
-}
-export declare const getMinDay: (startAt: string, roomPlans: RoomPlan[]) => number | null;
-export {};
+export declare const getMinDay: (startMoment: Moment, tenancyTerm: TenancyTerm) => number;

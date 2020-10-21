@@ -1,82 +1,17 @@
-import moment from "moment";
+import { Moment } from "moment";
 import { TenancyTerm } from "now-enum-parser";
 
-interface RoomPlan {
-  tenancyTerm: TenancyTerm;
-}
-
-enum TenancyTermPlacedAt {
-  "LessThanOneMonth" = 0,
-  "OneToThreeMonths" = 1,
-  "ThreeToSevenMonths" = 2,
-  "SevenMonthsToOneYear" = 3,
-  "MoreThanOneYear" = 4,
-}
+import { getMinTenancyMonthCount } from "./get_min_tenancy_month_count";
 
 export const getMinDay = (
-  startAt: string,
-  roomPlans: RoomPlan[]
-): number | null => {
-  let minTenancyMonthCount: number | null = null;
-  let minTenancyTermPlacedAt: TenancyTermPlacedAt | null = null;
-  roomPlans.forEach((roomPlan) => {
-    switch (roomPlan.tenancyTerm) {
-      case TenancyTerm.LessThanOneMonth:
-        minTenancyMonthCount = 0;
-        minTenancyTermPlacedAt = TenancyTermPlacedAt.LessThanOneMonth;
-        break;
-      case TenancyTerm.OneToThreeMonths:
-        if (
-          minTenancyTermPlacedAt === null ||
-          TenancyTermPlacedAt.OneToThreeMonths < minTenancyTermPlacedAt
-        ) {
-          minTenancyMonthCount = 1;
-          minTenancyTermPlacedAt = TenancyTermPlacedAt.OneToThreeMonths;
-        }
-        break;
-      case TenancyTerm.ThreeToSevenMonths:
-        if (
-          minTenancyTermPlacedAt === null ||
-          TenancyTermPlacedAt.ThreeToSevenMonths < minTenancyTermPlacedAt
-        ) {
-          minTenancyMonthCount = 3;
-          minTenancyTermPlacedAt = TenancyTermPlacedAt.OneToThreeMonths;
-        }
-        break;
-      case TenancyTerm.SevenMonthsToOneYear:
-        if (
-          minTenancyTermPlacedAt === null ||
-          TenancyTermPlacedAt.SevenMonthsToOneYear < minTenancyTermPlacedAt
-        ) {
-          minTenancyMonthCount = 7;
-          minTenancyTermPlacedAt = TenancyTermPlacedAt.OneToThreeMonths;
-        }
-        break;
-      case TenancyTerm.MoreThanOneYear:
-        if (
-          minTenancyTermPlacedAt === null ||
-          TenancyTermPlacedAt.MoreThanOneYear < minTenancyTermPlacedAt
-        ) {
-          minTenancyMonthCount = 12;
-          minTenancyTermPlacedAt = TenancyTermPlacedAt.OneToThreeMonths;
-        }
-        break;
-    }
-  });
-
-  if (minTenancyMonthCount === null) {
-    return null;
+  startMoment: Moment,
+  tenancyTerm: TenancyTerm
+): number => {
+  if (tenancyTerm === TenancyTerm.LessThanOneMonth) {
+    return 7;
   }
 
-  if (minTenancyMonthCount === 0) {
-    return 6;
-  }
-
-  const startMoment = moment(startAt).startOf("day");
-  if (!startMoment.isValid()) {
-    return null;
-  }
-
+  const minTenancyMonthCount = getMinTenancyMonthCount(tenancyTerm);
   if (startMoment.format("D") === "1") {
     const endMoment = startMoment
       .clone()
