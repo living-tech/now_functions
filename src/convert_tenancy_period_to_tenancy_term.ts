@@ -3,6 +3,10 @@ import { TenancyTerm } from "now-enum-parser";
 
 import { countUseDays } from "./count_use_days";
 
+/**
+ * 入居日と退去日からプランを出す
+ * 該当するプランがなければnullを返す
+ */
 export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
   startAt: string;
   endAt: string;
@@ -19,7 +23,7 @@ export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
     !endMoment.isValid() ||
     startMoment.isAfter(endMoment) ||
     allUseDays === null ||
-    allUseDays < 7
+    allUseDays < 8
   ) {
     return null;
   }

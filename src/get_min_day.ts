@@ -8,7 +8,7 @@ export const getMinDay = (
   tenancyTerm: TenancyTerm
 ): number => {
   if (tenancyTerm === TenancyTerm.LessThanOneMonth) {
-    return 7;
+    return 8;
   }
 
   const minTenancyMonthCount = getMinTenancyMonthCount(tenancyTerm);

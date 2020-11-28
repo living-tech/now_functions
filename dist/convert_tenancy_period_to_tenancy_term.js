@@ -7,6 +7,10 @@ exports.convertTenancyPeriodToTenancyTerm = void 0;
 const moment_1 = __importDefault(require("moment"));
 const now_enum_parser_1 = require("now-enum-parser");
 const count_use_days_1 = require("./count_use_days");
+/**
+ * 入居日と退去日からプランを出す
+ * 該当するプランがなければnullを返す
+ */
 exports.convertTenancyPeriodToTenancyTerm = (tenancyPeriod) => {
     const startMoment = moment_1.default(tenancyPeriod.startAt).startOf("day");
     const endMoment = moment_1.default(tenancyPeriod.endAt).startOf("day");
@@ -18,7 +22,7 @@ exports.convertTenancyPeriodToTenancyTerm = (tenancyPeriod) => {
         !endMoment.isValid() ||
         startMoment.isAfter(endMoment) ||
         allUseDays === null ||
-        allUseDays < 7) {
+        allUseDays < 8) {
         return null;
     }
     let useMonths = 0;
