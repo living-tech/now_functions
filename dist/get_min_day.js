@@ -5,7 +5,7 @@ const now_enum_parser_1 = require("now-enum-parser");
 const get_min_tenancy_month_count_1 = require("./get_min_tenancy_month_count");
 exports.getMinDay = (startMoment, tenancyTerm) => {
     if (tenancyTerm === now_enum_parser_1.TenancyTerm.LessThanOneMonth) {
-        return 7;
+        return 8;
     }
     const minTenancyMonthCount = get_min_tenancy_month_count_1.getMinTenancyMonthCount(tenancyTerm);
     if (startMoment.format("D") === "1") {
