@@ -7,6 +7,7 @@ exports.countShortOfDaysToNextPlan = void 0;
 const moment_1 = __importDefault(require("moment"));
 const now_enum_parser_1 = require("now-enum-parser");
 const convert_tenancy_period_to_tenancy_term_1 = require("./convert_tenancy_period_to_tenancy_term");
+const count_use_days_1 = require("./count_use_days");
 const getNextTenancyTerm = (currentTenancyTerm) => {
     switch (currentTenancyTerm) {
         case now_enum_parser_1.TenancyTerm.LessThanOneMonth:
@@ -20,6 +21,55 @@ const getNextTenancyTerm = (currentTenancyTerm) => {
         default:
             return null;
     }
+};
+const getMinTenancyMonthCount = (tenancyTerm) => {
+    switch (tenancyTerm) {
+        case now_enum_parser_1.TenancyTerm.OneToThreeMonths:
+            return 1;
+        case now_enum_parser_1.TenancyTerm.ThreeToSevenMonths:
+            return 3;
+        case now_enum_parser_1.TenancyTerm.SevenMonthsToOneYear:
+            return 7;
+        case now_enum_parser_1.TenancyTerm.MoreThanOneYear:
+            return 12;
+        default:
+            return 0;
+    }
+};
+const getMinDay = (startMoment, tenancyTerm) => {
+    if (tenancyTerm === now_enum_parser_1.TenancyTerm.LessThanOneMonth) {
+        return 8;
+    }
+    const minTenancyMonthCount = getMinTenancyMonthCount(tenancyTerm);
+    if (startMoment.format("D") === "1") {
+        const endMoment = startMoment
+            .clone()
+            .add(minTenancyMonthCount, "months")
+            .startOf("month")
+            .add(-1, "day");
+        return endMoment.diff(startMoment, "day") + 1;
+    }
+    const startLastMoment = startMoment.clone().endOf("month").startOf("day");
+    const startMaxDays = startMoment.daysInMonth();
+    const startUseDays = startLastMoment.diff(startMoment, "days");
+    let minDayCount = 0;
+    for (let i = 0; i <= minTenancyMonthCount; i += 1) {
+        const targetMonthMoment = startMoment
+            .clone()
+            .add(i, "month")
+            .startOf("month");
+        const targetMaDays = targetMonthMoment.daysInMonth();
+        if (i === 0) {
+            minDayCount += startUseDays;
+        }
+        else if (i === minTenancyMonthCount) {
+            minDayCount += Math.ceil((1 - startUseDays / startMaxDays) * targetMaDays);
+        }
+        else {
+            minDayCount += targetMaDays;
+        }
+    }
+    return minDayCount;
 };
 exports.countShortOfDaysToNextPlan = (tenancyPeriod, roomPlans) => {
     const startMoment = moment_1.default(tenancyPeriod.startAt).startOf("day");
@@ -46,37 +96,14 @@ exports.countShortOfDaysToNextPlan = (tenancyPeriod, roomPlans) => {
     if (nextRoomPlan === undefined) {
         return null;
     }
-    const daysInMonth = startMoment.daysInMonth();
-    const useDays = startMoment
-        .clone()
-        .endOf("month")
-        .startOf("day")
-        .diff(startMoment, "days") + 1;
-    let addMonths = null;
-    switch (currentTenancyTerm) {
-        case now_enum_parser_1.TenancyTerm.LessThanOneMonth:
-            addMonths = 1;
-            break;
-        case now_enum_parser_1.TenancyTerm.OneToThreeMonths:
-            addMonths = 3;
-            break;
-        case now_enum_parser_1.TenancyTerm.ThreeToSevenMonths:
-            addMonths = 7;
-            break;
-        case now_enum_parser_1.TenancyTerm.SevenMonthsToOneYear:
-            addMonths = 12;
-            break;
-    }
-    if (addMonths === null) {
+    const useDays = count_use_days_1.countUseDays({
+        startAt: tenancyPeriod.startAt,
+        endAt: tenancyPeriod.endAt,
+    });
+    if (useDays === null) {
         return null;
     }
-    const nextPlanStartMonthMoment = startMoment
-        .clone()
-        .add(addMonths, "month")
-        .startOf("month");
-    const dateOfStartMonth = Math.ceil((1 - useDays / daysInMonth) * nextPlanStartMonthMoment.daysInMonth());
-    const nextPlanStartMoment = nextPlanStartMonthMoment.add(dateOfStartMonth - 1, "days");
-    const shortOfDays = nextPlanStartMoment.diff(endMoment, "days");
+    const shortOfDays = getMinDay(startMoment, nextRoomPlan.tenancyTerm) - useDays;
     const difference = Math.ceil(currentRoomPlan.totalRentCharge / 28) -
         Math.ceil(nextRoomPlan.totalRentCharge / 28);
     if (difference <= 0) {

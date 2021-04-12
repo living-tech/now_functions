@@ -26,26 +26,30 @@ exports.convertTenancyPeriodToTenancyTerm = (tenancyPeriod) => {
         return null;
     }
     let useMonths = 0;
-    let targetMonthMoment = startMoment.clone().startOf("month");
-    while (targetMonthMoment.isSameOrBefore(endMoment, "month")) {
-        const daysInMonth = targetMonthMoment.daysInMonth();
-        let useDays = daysInMonth;
-        if (startMoment.isSame(endMoment, "month")) {
-            useDays = endMoment.diff(targetMonthMoment, "days") + 1;
-        }
-        else if (targetMonthMoment.isSame(endMoment, "month")) {
-            useDays = endMoment.diff(targetMonthMoment, "days") + 1;
-        }
-        else if (targetMonthMoment.isSame(startMoment, "month")) {
-            useDays =
-                targetMonthMoment
-                    .clone()
-                    .endOf("month")
-                    .startOf("day")
-                    .diff(startMoment, "days") + 1;
-        }
+    if (startMoment.isSame(endMoment, "month")) {
+        const daysInMonth = startMoment.daysInMonth();
+        const useDays = endMoment.diff(startMoment, "days") + 1;
         useMonths += useDays / daysInMonth;
-        targetMonthMoment.add(1, "month");
+    }
+    else {
+        let targetMonthMoment = startMoment.clone().startOf("month");
+        while (targetMonthMoment.isSameOrBefore(endMoment, "month")) {
+            const daysInMonth = targetMonthMoment.daysInMonth();
+            let useDays = daysInMonth;
+            if (targetMonthMoment.isSame(startMoment, "month")) {
+                useDays =
+                    targetMonthMoment
+                        .clone()
+                        .endOf("month")
+                        .startOf("day")
+                        .diff(startMoment, "days") + 1;
+            }
+            if (targetMonthMoment.isSame(endMoment, "month")) {
+                useDays = endMoment.diff(targetMonthMoment, "days") + 1;
+            }
+            useMonths += useDays / daysInMonth;
+            targetMonthMoment.add(1, "month");
+        }
     }
     // 12ヶ月（1年）以上
     if (useMonths >= 12) {
