@@ -1,4 +1,9 @@
+import { Moment } from "moment";
 import { TenancyTerm } from "now-enum-parser";
+export declare const getMinTenancyMonthCount: (tenancyTerm: TenancyTerm) => number;
+export declare const getMaxTenancyMonthCount: (tenancyTerm: TenancyTerm) => number | null;
+export declare const getMaxDay: (startMoment: Moment, tenancyTerm: TenancyTerm) => number | null;
+export declare const getMinDay: (startMoment: Moment, tenancyTerm: TenancyTerm) => number;
 interface RoomPlan {
     tenancyTerm: TenancyTerm;
 }
