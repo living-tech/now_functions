@@ -105,7 +105,10 @@ exports.getMinDay = (startMoment, tenancyTerm) => {
     return minDayCount;
 };
 exports.validateTenancyPeriod = (tenancyPeriod, roomPlans) => {
-    const targetTenancyTerm = convert_tenancy_period_to_tenancy_term_1.convertTenancyPeriodToTenancyTerm({ startAt: tenancyPeriod.startAt, endAt: tenancyPeriod.endAt });
+    const targetTenancyTerm = convert_tenancy_period_to_tenancy_term_1.convertTenancyPeriodToTenancyTerm({
+        startAt: tenancyPeriod.startAt,
+        endAt: tenancyPeriod.endAt,
+    });
     if (targetTenancyTerm === null) {
         return { hasPlan: false, endAtDetails: null };
     }

@@ -3,7 +3,7 @@ type Location = {
   column: number;
 };
 
-type ValidationMessage = {
+export type ValidationMessage = {
   targetKey: string; // "email",
   messages: string; // "メールアドレスが不正です"
 };
@@ -15,7 +15,7 @@ type Response = {
   messages: ValidationMessage[];
 };
 
-type Extensions = {
+export type Extensions = {
   code: string; // "INTERNAL_SERVER_ERROR",
   exception: {
     response: Response;
@@ -33,7 +33,7 @@ type Extensions = {
   validationMessages: ValidationMessage[];
 };
 
-type ValidationError = {
+export type ValidationError = {
   message: string; // "ユーザー情報を更新できませんでした。時間を置いて今一度お試しください。",
   locations: Location[];
   path: string[]; // ["updateForApplication"]
