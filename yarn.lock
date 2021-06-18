@@ -3242,7 +3242,7 @@ normalize-path@^3.0.0:
 
 "now-enum-parser@https://github.com/living-tech/now_enum_parser.git":
   version "1.0.0"
-  resolved "https://github.com/living-tech/now_enum_parser.git#281e06326f6c36f75c4d22d77f2969600d3364d5"
+  resolved "https://github.com/living-tech/now_enum_parser.git#1c9c0aad26e1bb3a75647bfa8781d1b7b5a6ddc3"
 
 npm-run-path@^2.0.0:
   version "2.0.2"

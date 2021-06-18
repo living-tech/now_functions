@@ -55,6 +55,11 @@ export const convertTenancyPeriodToTenancyTerm = (tenancyPeriod: {
     }
   }
 
+  // 24ヶ月（2年）以上
+  if (useMonths >= 24) {
+    return TenancyTerm.MoreThanTwoYear;
+  }
+
   // 12ヶ月（1年）以上
   if (useMonths >= 12) {
     return TenancyTerm.MoreThanOneYear;

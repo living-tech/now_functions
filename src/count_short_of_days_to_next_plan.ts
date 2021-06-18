@@ -1,7 +1,11 @@
 import moment, { Moment } from "moment";
 import { TenancyTerm } from "now-enum-parser";
 
-import { RoomPlan, TenancyPeriod, CountShortOfDaysToNextPlan } from "./interface";
+import {
+  RoomPlan,
+  TenancyPeriod,
+  CountShortOfDaysToNextPlan,
+} from "./interface";
 import { convertTenancyPeriodToTenancyTerm } from "./convert_tenancy_period_to_tenancy_term";
 import { countUseDays } from "./count_use_days";
 
@@ -17,6 +21,8 @@ const getNextTenancyTerm = (
       return TenancyTerm.SevenMonthsToOneYear;
     case TenancyTerm.SevenMonthsToOneYear:
       return TenancyTerm.MoreThanOneYear;
+    case TenancyTerm.MoreThanOneYear:
+      return TenancyTerm.MoreThanTwoYear;
     default:
       return null;
   }
@@ -32,15 +38,14 @@ const getMinTenancyMonthCount = (tenancyTerm: TenancyTerm): number => {
       return 7;
     case TenancyTerm.MoreThanOneYear:
       return 12;
+    case TenancyTerm.MoreThanTwoYear:
+      return 24;
     default:
       return 0;
   }
 };
 
-const getMinDay = (
-  startMoment: Moment,
-  tenancyTerm: TenancyTerm
-): number => {
+const getMinDay = (startMoment: Moment, tenancyTerm: TenancyTerm): number => {
   if (tenancyTerm === TenancyTerm.LessThanOneMonth) {
     return 8;
   }
@@ -118,9 +123,10 @@ export const countShortOfDaysToNextPlan = (
     endAt: tenancyPeriod.endAt,
   });
   if (useDays === null) {
-    return null
+    return null;
   }
-  const shortOfDays = getMinDay(startMoment, nextRoomPlan.tenancyTerm) - useDays;
+  const shortOfDays =
+    getMinDay(startMoment, nextRoomPlan.tenancyTerm) - useDays;
 
   const difference =
     Math.ceil(currentRoomPlan.totalRentCharge / 28) -

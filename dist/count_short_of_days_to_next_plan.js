@@ -18,6 +18,8 @@ const getNextTenancyTerm = (currentTenancyTerm) => {
             return now_enum_parser_1.TenancyTerm.SevenMonthsToOneYear;
         case now_enum_parser_1.TenancyTerm.SevenMonthsToOneYear:
             return now_enum_parser_1.TenancyTerm.MoreThanOneYear;
+        case now_enum_parser_1.TenancyTerm.MoreThanOneYear:
+            return now_enum_parser_1.TenancyTerm.MoreThanTwoYear;
         default:
             return null;
     }
@@ -32,6 +34,8 @@ const getMinTenancyMonthCount = (tenancyTerm) => {
             return 7;
         case now_enum_parser_1.TenancyTerm.MoreThanOneYear:
             return 12;
+        case now_enum_parser_1.TenancyTerm.MoreThanTwoYear:
+            return 24;
         default:
             return 0;
     }
