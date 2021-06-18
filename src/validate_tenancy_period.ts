@@ -152,7 +152,7 @@ export const validateTenancyPeriod = (
     return { hasPlan: false, endAtDetails: null };
   }
 
-  const hasPlan = roomPlans.some((rp) => rp.tenancyTerm <= targetTenancyTerm);
+  const hasPlan = roomPlans.some((rp) => rp.tenancyTerm === targetTenancyTerm);
   if (hasPlan === true) {
     return { hasPlan, endAtDetails: null };
   }
