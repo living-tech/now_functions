@@ -51,6 +51,10 @@ exports.convertTenancyPeriodToTenancyTerm = (tenancyPeriod) => {
             targetMonthMoment.add(1, "month");
         }
     }
+    // 24ヶ月（2年）以上
+    if (useMonths >= 24) {
+        return now_enum_parser_1.TenancyTerm.MoreThanTwoYear;
+    }
     // 12ヶ月（1年）以上
     if (useMonths >= 12) {
         return now_enum_parser_1.TenancyTerm.MoreThanOneYear;

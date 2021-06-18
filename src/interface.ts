@@ -10,5 +10,7 @@ export interface RoomPlan {
   tenancyTerm: TenancyTerm;
 }
 
-export interface CountShortOfDaysToNextPlan { shortOfDays: number; difference: number }
-  
+export interface CountShortOfDaysToNextPlan {
+  shortOfDays: number;
+  difference: number;
+}

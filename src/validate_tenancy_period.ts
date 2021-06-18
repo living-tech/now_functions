@@ -5,7 +5,6 @@ import { Moment } from "moment";
 
 import { TenancyTerm } from "now-enum-parser";
 
-
 export const getMinTenancyMonthCount = (tenancyTerm: TenancyTerm): number => {
   switch (tenancyTerm) {
     case TenancyTerm.OneToThreeMonths:
@@ -16,11 +15,12 @@ export const getMinTenancyMonthCount = (tenancyTerm: TenancyTerm): number => {
       return 7;
     case TenancyTerm.MoreThanOneYear:
       return 12;
+    case TenancyTerm.MoreThanTwoYear:
+      return 24;
     default:
       return 0;
   }
 };
-
 
 export const getMaxTenancyMonthCount = (
   tenancyTerm: TenancyTerm
@@ -34,6 +34,8 @@ export const getMaxTenancyMonthCount = (
       return 7;
     case TenancyTerm.SevenMonthsToOneYear:
       return 12;
+    case TenancyTerm.MoreThanOneYear:
+      return 24;
     default:
       return null;
   }
@@ -133,26 +135,26 @@ export const validateTenancyPeriod = (
 ): {
   hasPlan: boolean;
   endAtDetails:
-  | {
-    tenancyTerm: TenancyTerm;
-    minDay: number;
-    maxDay: number | null;
-    minDate: String;
-    maxDate: String | null;
-  }[]
-  | null;
+    | {
+        tenancyTerm: TenancyTerm;
+        minDay: number;
+        maxDay: number | null;
+        minDate: String;
+        maxDate: String | null;
+      }[]
+    | null;
 } => {
-  const targetTenancyTerm = convertTenancyPeriodToTenancyTerm({ startAt: tenancyPeriod.startAt, endAt: tenancyPeriod.endAt })
+  const targetTenancyTerm = convertTenancyPeriodToTenancyTerm({
+    startAt: tenancyPeriod.startAt,
+    endAt: tenancyPeriod.endAt,
+  });
   if (targetTenancyTerm === null) {
-    return { hasPlan: false, endAtDetails: null }
+    return { hasPlan: false, endAtDetails: null };
   }
 
-  const hasPlan = roomPlans.some(
-    (rp) =>
-      rp.tenancyTerm <= targetTenancyTerm
-  );
+  const hasPlan = roomPlans.some((rp) => rp.tenancyTerm === targetTenancyTerm);
   if (hasPlan === true) {
-    return { hasPlan, endAtDetails: null }
+    return { hasPlan, endAtDetails: null };
   }
 
   const startMoment = moment(tenancyPeriod.startAt).startOf("day");
@@ -170,9 +172,9 @@ export const validateTenancyPeriod = (
       maxDate:
         maxDay !== null
           ? startMoment
-            .clone()
-            .add(maxDay - 1, "days")
-            .format("YYYY-MM-DD")
+              .clone()
+              .add(maxDay - 1, "days")
+              .format("YYYY-MM-DD")
           : null,
     };
   });
